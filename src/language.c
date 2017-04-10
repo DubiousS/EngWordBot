@@ -8,7 +8,7 @@ int read_rus()
 
 int read_eng() 
 {
-    return 0;
+    return 1;
 }
 
 int main()
