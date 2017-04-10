@@ -14,7 +14,7 @@ int read_eng()
 int main()
 {
 
-	FILE *in = fopen("russian-english.txt", "rt");
+	FILE *in = fopen("rus-eng.txt", "rt");
     char il;
 
 
