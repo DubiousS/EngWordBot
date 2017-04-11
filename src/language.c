@@ -15,18 +15,30 @@ FILE *skip_string(FILE *in)
     return in;
 }
 
+FILE *skip_string_to_bukva(FILE *in, wchar_t *input_word) 
+{
+    wchar_t word;
+    fseek(in, 0, SEEK_SET);
+    while(fscanf(in,"%C", &word) != EOF) {
+        if(word == *input_word) {
+            fseek(in, -sizeof(wchar_t) + 2, SEEK_CUR);
+            return in;
+        } else {
+            skip_string(in);
+        }
+    }
+   return NULL;
+}
+
 int search_rus(FILE *in, wchar_t *input_word, int length) 
 {
     wchar_t word;
     int i = 0;
     while(fscanf(in,"%C", &word) != EOF) {
         if(word == '|') {
-            in = skip_string(in);
-        }
-        if(word = *input_word) {
-            printf("good\n");
             break;
         }
+        printf("%C", word);
     }
     return 1;
 }
@@ -61,6 +73,7 @@ int main()
         perror("error");
         return -1;
     }
+    in = skip_string_to_bukva(in, L"а");
     search_rus(in, L"авиапочтa", sizeof(L"авиапочта")/sizeof(wchar_t));
     printf("\n");
     search_eng(in, L"р");
