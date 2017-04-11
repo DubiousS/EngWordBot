@@ -2,38 +2,50 @@
 #include <string.h>
 #include <wchar.h>
 #include <locale.h>
-int read_rus(FILE *in, wchar_t *input_word) 
+
+FILE *skip_string(FILE *in) 
 {
     wchar_t word;
     while(1) {
         fscanf(in,"%C", &word);
-        if(word == '|') {
+        if(word == '\n') {
             break;
-        } else {
-
         }
-        printf("%C", word);
+    }
+    return in;
+}
+
+int search_rus(FILE *in, wchar_t *input_word, int length) 
+{
+    wchar_t word;
+    int i = 0;
+    while(fscanf(in,"%C", &word) != EOF) {
+        if(word == '|') {
+            in = skip_string(in);
+        }
+        if(word = *input_word) {
+            printf("good\n");
+            break;
+        }
     }
     return 1;
 }
 
-int read_eng(FILE *in, wchar_t *input_word) 
+
+
+int search_eng(FILE *in, wchar_t *input_word) 
 {
     wchar_t word;
     while(1) {
         fscanf(in,"%C", &word);
         if(word == '|') {
             break;
-        } else {
-
         }
     }
     while(1) {
         fscanf(in,"%C", &word);
         if(word == '\n') {
             break;
-        } else {
-
         }
         printf("%C", word);
     }
@@ -49,9 +61,9 @@ int main()
         perror("error");
         return -1;
     }
-    read_rus(in, L"р");
+    search_rus(in, L"авиапочтa", sizeof(L"авиапочта")/sizeof(wchar_t));
     printf("\n");
-    read_eng(in, L"р");
+    search_eng(in, L"р");
     printf("\n");
     fclose(in);
     return 0;
