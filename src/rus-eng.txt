@@ -1,4 +1,5 @@
-﻿абажур|lampshade
+﻿
+абажур|lampshade
 аборт, неудача|abortion
 абрикос|apricot
 абрикосовый сок|apricot juice
