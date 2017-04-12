@@ -2480,7 +2480,7 @@
 дом свиданий|bawdy house
 дом, домашний, домой|home
 дом|housing
-дома (от home)|homes
+дома|homes
 дома, фирмы|houses
 домашнее вино|house wine
 домашние животные (от pet)|pets

@@ -3,19 +3,37 @@
 #include <wchar.h>
 #include <locale.h>
 
+int w_strcmp(const wchar_t *one, const wchar_t *two) 
+{
+
+    while(1) {
+        if(*one == *two) {
+            if(*one == L'\0' && *two == L'\0') {
+                break;
+            }
+            if(*one == L'\0' || *two == L'\0') {
+                return 0;
+            }
+            one++;
+            two++;
+        } else return 0;
+    }
+    return 1;
+}
+
 FILE *skip_string(FILE *in) 
 {
     wchar_t word;
     while(1) {
         fscanf(in,"%C", &word);
         if(word == '\n') {
-            break;
+            return in;
         }
     }
-    return in;
+    return NULL;
 }
 
-FILE *skip_string_to_symbol(FILE *in, wchar_t *input_word) 
+FILE *skip_str_to_rus_sym(FILE *in, const wchar_t *input_word) 
 {
     wchar_t word;
     fseek(in, 0, SEEK_SET);
@@ -30,19 +48,29 @@ FILE *skip_string_to_symbol(FILE *in, wchar_t *input_word)
    return NULL;
 }
 
-int search_rus(FILE *in, wchar_t *input_word, int length) 
+FILE *translate_rus(FILE *in, const wchar_t *input_word) 
 {
-    wchar_t word;
-    printf("%S\n", input_word);
-    strcmp(argv[1], "encode");
+    wchar_t tmp;
+    wchar_t word[64];
+    fseek(in, 0, SEEK_SET);
+    in = skip_str_to_rus_sym(in, input_word);
     int i = 0;
-    while(fscanf(in,"%C", &word) != EOF) {
-        if(word == '|') {
-            break;
+    while(fscanf(in,"%C", &tmp) != EOF) {
+        if(tmp == '|') {
+            word[i] = '\0';
+            if(w_strcmp(word, input_word)) {
+                fseek(in, i * -2 - 1, SEEK_CUR);
+                return in;
+            } else {
+                i = 0;
+                skip_string(in);   
+                continue;
+            }
         }
-        printf("%C", word);
+        word[i] = tmp;
+        i++;
     }
-    return 1;
+    return NULL;
 }
 
 
@@ -64,22 +92,4 @@ int search_eng(FILE *in, wchar_t *input_word)
         printf("%C", word);
     }
     return 1;
-}
-
-int main()
-{   
-    setlocale(LC_ALL, "ru_RU.UTF-8");
-
-	FILE *in = fopen("rus-eng.txt", "r");
-    if(!in){
-        perror("error");
-        return -1;
-    }
-    in = skip_string_to_symbol(in, L"а");
-    search_rus(in, L"абажур", sizeof(L"абажур") / sizeof(wchar_t));
-    printf("\n");
-    search_eng(in, NULL);
-    printf("\n");
-    fclose(in);
-    return 0;
 }
