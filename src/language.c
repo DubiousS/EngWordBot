@@ -90,8 +90,6 @@ FILE *translate_rus(FILE *in, const wchar_t *input_word)
     return NULL;
 }
 
-
-
 FILE *translate_eng(FILE *in, const wchar_t *input_word) 
 {
     wchar_t tmp;
@@ -128,5 +126,4 @@ FILE *translate_eng(FILE *in, const wchar_t *input_word)
         i++;
     }
     return NULL;
-
 }
