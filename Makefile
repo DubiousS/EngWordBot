@@ -1,23 +1,25 @@
-FOLDER := src/
-FOLDER_TWO := build/
-SRC := main.c
-SRCH :=  
-SOURCE := $(addprefix $(FOLDER), $(SRC) $(SRCH))
-SOURCE_O := $(addprefix $(FOLDER_TWO), $(SRC))
 TARGET := bin/main
 CC := gcc
-CFLAGS := -Wall -Werror -c
+CFLAGS :=  -Wall -Werror -c
+LFLAGS := -I thirdparty -I src -c
 
  
-all: $(SOURCE) $(TARGET)
+all: $(TARGET)
 
-$(TARGET): $(SOURCE:.c=.o)
-	$(CC) $(SOURCE_O:.c=.o) -o $@
+$(TARGET): build/src/main.o build/src/server.o build/src/output.o
+		$(CC) build/src/main.o build/src/server.o build/src/output.o -o $@ -lssl -lcrypto
 
-.c.o: 
-	$(CC) $(CFLAGS) $< -o $(FOLDER_TWO)$(notdir $@)
+
+build/src/main.o: src/main.c
+		$(CC) $(CFLAGS) src/main.c -o $@ 
+
+build/src/server.o: src/server.c
+		$(CC) $(CFLAGS) src/server.c -o $@ 
+
+build/src/output.o: src/output.c
+		$(CC) $(CFLAGS) src/output.c -o $@
 
 .PHONY: all clean
-clean:
-	rm -f *.o
+clean:	
+	rm -f build/src/*.o
 	rm -f bin/*
