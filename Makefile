@@ -6,8 +6,8 @@ LFLAGS := -I thirdparty -I src -c
  
 all: $(TARGET)
 
-$(TARGET): build/src/main.o build/src/server.o build/src/output.o
-		$(CC) build/src/main.o build/src/server.o build/src/output.o -o $@ -lssl -lcrypto
+$(TARGET): build/src/main.o build/src/server.o build/src/output.o build/src/language.o
+		$(CC) build/src/main.o build/src/server.o build/src/output.o build/src/language.o -o $@ -lssl -lcrypto
 
 
 build/src/main.o: src/main.c
@@ -18,6 +18,9 @@ build/src/server.o: src/server.c
 
 build/src/output.o: src/output.c
 		$(CC) $(CFLAGS) src/output.c -o $@
+
+build/src/language.o: src/language.c
+		$(CC) $(CFLAGS) src/language.c -o $@
 
 .PHONY: all clean
 clean:	

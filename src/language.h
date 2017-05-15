@@ -13,6 +13,6 @@ FILE *skip_string(FILE *in);
 FILE *skip_str_to_rus_sym(FILE *in, const wchar_t *input_word);
 FILE *translate_rus(FILE *in, const wchar_t *input_word);
 FILE *translate_eng(FILE *in, const wchar_t *input_word);
-int message(char const *word, char const *type);
+int message(char const *input_word, char *msg, char const *type);
 
 #endif

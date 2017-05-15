@@ -8,6 +8,8 @@
 #include <sys/types.h>
 #include <resolv.h>
 #include <netdb.h>
+#include "language.h"
+
 #ifndef OUTPUT_H
 #define OUTPUT_H
 

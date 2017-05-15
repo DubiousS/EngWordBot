@@ -153,7 +153,7 @@ int read_words(FILE *in, char *rus, char *eng)
     return 1;
 }
 
-int message(char const *word, char const *type)
+int message(char const *input_word, char *msg, char const *type)
 {
     char rus[64];
     char eng[64];
@@ -163,10 +163,10 @@ int message(char const *word, char const *type)
         return -1;
     }
     wchar_t word[1024];
-    swprintf(word, 1024, L"%s", argv[1]);
-    if(!strcmp(type), "rus")) {
+    swprintf(word, 1024, L"%s", input_word);
+    if(!strcmp(type, "rus")) {
         input = translate_rus(input, word);
-    } else if(!strcmp(type), "eng")) {
+    } else if(!strcmp(type, "eng")) {
         input = translate_eng(input, word);
     }
     if(input != NULL) {

@@ -22,7 +22,7 @@ int output(char *body, char *msg)
         temp[4] = '\0';
         strcpy(temp, text);
         if(!strcmp(temp, "/rus")) {
-            strcpy(msg, "translate eng");
+            message("hello", msg, "rus");
         } else if(!strcmp(temp, "/eng")) {
             strcpy(msg, "translate rus");
         } else strcpy(msg, text);
