@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <wchar.h>
-#include <locale.h>
-#include <ctype.h>
+#include "language.h"
 
 int w_strcmp(const wchar_t *one, const wchar_t *two) 
 {
@@ -29,7 +25,7 @@ FILE *skip_string(FILE *in)
         if(fscanf(in,"%C", &word) == EOF) {
             return NULL;
         }
-        if(word == '\n') {
+        if(word == L'\n') {
             return in;
         }
     }
@@ -67,8 +63,8 @@ FILE *translate_rus(FILE *in, const wchar_t *input_word)
             fixed++;
         } else fixed += 2;
 
-        if(tmp == '|') {
-            word[i] = '\0';
+        if(tmp == L'|') {
+            word[i] = L'\0';
             i++;
             if(w_strcmp(word, input_word)) {
                 fseek(in, -(fixed), SEEK_CUR);
@@ -126,4 +122,58 @@ FILE *translate_eng(FILE *in, const wchar_t *input_word)
         i++;
     }
     return NULL;
+}
+
+int read_words(FILE *in, char *rus, char *eng) 
+{
+    int i = 0;
+    wchar_t word;
+    wchar_t str[64];
+    while(1) {
+        fscanf(in,"%C", &word);
+        if(word == L'|') {
+            str[i] = L'\0';
+            break;
+        }
+        str[i] = word;
+        i++;
+    }
+    sprintf(rus, "%S", str);
+    i = 0;
+    while(1) {
+        fscanf(in,"%C", &word);
+        if(word == L'\n') {
+            str[i] = L'\0';
+            break;
+        }
+        str[i] = word;
+        i++;
+    }
+    sprintf(eng, "%S", str);
+    return 1;
+}
+
+int message(char const *word, char const *type)
+{
+    char rus[64];
+    char eng[64];
+    FILE *input = fopen("rus-eng.txt", "rt");
+    if(!input){
+        perror("error");
+        return -1;
+    }
+    wchar_t word[1024];
+    swprintf(word, 1024, L"%s", argv[1]);
+    if(!strcmp(type), "rus")) {
+        input = translate_rus(input, word);
+    } else if(!strcmp(type), "eng")) {
+        input = translate_eng(input, word);
+    }
+    if(input != NULL) {
+       read_words(input, rus, eng);
+    } else printf("Not Found\n");
+    if(input != NULL) {
+        fclose(input);
+    }
+    return 0;
 }
