@@ -53,10 +53,7 @@ FILE *translate_rus(FILE *in, const wchar_t *input_word)
     wchar_t word[64];
     fseek(in, 0, SEEK_SET);
     in = skip_str_to_rus_sym(in, input_word);
-    if(in == NULL) {
-        fseek(in, 0, SEEK_SET);
-        return NULL;
-    }
+    if(in == NULL) return NULL;
     int i = 0, fixed = 0;
     while(fscanf(in,"%C", &tmp) != EOF) {
         if(isascii(tmp)) {
@@ -72,17 +69,13 @@ FILE *translate_rus(FILE *in, const wchar_t *input_word)
             } else {
                 fixed = 0;
                 i = 0;
-                if(skip_string(in) == NULL) {
-                    fseek(in, 0, SEEK_SET);
-                    return NULL;
-                }   
+                if(skip_string(in) == NULL) return NULL;
                 continue;
             }
         }
         word[i] = tmp;
         i++;
     }
-    fseek(in, 0, SEEK_SET);
     return NULL;
 }
 
@@ -155,15 +148,16 @@ int read_words(FILE *in, char *rus, char *eng)
 
 int message(char const *input_word, char *msg, char const *type)
 {
-    char rus[64];
-    char eng[64];
-    FILE *input = fopen("rus-eng.txt", "rt");
+    char rus[1024];
+    char eng[1024];
+    FILE *input = fopen("../src/rus-eng.txt", "rt");
     if(!input){
         perror("error");
         return -1;
     }
     wchar_t word[1024];
     swprintf(word, 1024, L"%s", input_word);
+    printf("%S\n", word);
     if(!strcmp(type, "rus")) {
         input = translate_rus(input, word);
         if(input != NULL) {

@@ -8,10 +8,13 @@
 #include <sys/types.h>
 #include <resolv.h>
 #include <netdb.h>
+#include <locale.h>
 #include "server.h"
 #include "output.h"
 
 int main() {
+
+    setlocale(LC_ALL, "ru_RU.UTF-8");
     SSL_CTX * sslctx = InitializeSSL("../ssl/cert.pem");
     int sd = InitializeSocket(8443);  //Порт который вы указали при установке WebHook
     listen(sd, 5); //Слушаем подключения на созданном сокете
