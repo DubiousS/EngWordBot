@@ -1,5 +1,4 @@
 #include "output.h"
-#include "language.h"
 
 
 int output(char *body, char *msg)
