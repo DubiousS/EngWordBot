@@ -166,12 +166,15 @@ int message(char const *input_word, char *msg, char const *type)
     swprintf(word, 1024, L"%s", input_word);
     if(!strcmp(type, "rus")) {
         input = translate_rus(input, word);
+        if(input != NULL) {
+            read_words(input, rus, msg);
+        } else strcpy(msg, "Not Found");
     } else if(!strcmp(type, "eng")) {
         input = translate_eng(input, word);
+        if(input != NULL) {
+            read_words(input, msg, eng);
+        } else strcpy(msg, "Not Found");
     }
-    if(input != NULL) {
-       read_words(input, rus, eng);
-    } else printf("Not Found\n");
     if(input != NULL) {
         fclose(input);
     }
