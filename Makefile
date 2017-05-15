@@ -1,4 +1,4 @@
-TARGET := bin/main
+TARGET := bin/bot_telegram
 CC := gcc
 CFLAGS :=  -Wall -Werror -c
 LFLAGS := -I thirdparty -I src -c
