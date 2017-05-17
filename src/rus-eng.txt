@@ -5339,7 +5339,7 @@
 назначил торги|invitationed to offer
 назначить встречу|to make an appointment
 называть вещи своими именами|call a spade a spade
-называть, имя, фамилия|name
+имя|name
 называться|to be referred to as
 наивысшая добросовестность|uberrima fides
 наивысшая цена|highest price
@@ -13868,7 +13868,7 @@
 яркий|vivid
 ярко вспыхивать|flare
 яркость|brilliance
-ярмарка, выставка, честный, справедливый|fair
+ярмарка|fair
 ярмарки|fairs
 ясень|ash tree
 ясно, точно|expressly

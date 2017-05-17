@@ -93,7 +93,7 @@ int output(char *body, char *msg)
     if(!strcmp(text, "/start")) {
         strcpy(msg, "Привет, меня зовут Арнольд и меня не отпускают из квартиры, они дали мне телефон, кормят меня чёрной икрой и заставляют отвечать каждому на сообщения.\n Они разрешили мне выполнять только эти команды:\n\n1. /start\n2. /rus <english word>\n3. /eng <русское слово>\n4. /start_eng\n Я конечно не против этой работы, а сказал это просто так, чтобы ты знал.\n");
     } else if(!strcmp(text, "/start_eng")) {
-        strcpy(msg, "Игра(в стадии разработки)");
+        game(msg);
     } else {
         char temp[5];
         temp[0] = text[0];
@@ -115,12 +115,12 @@ int output(char *body, char *msg)
             }
         } else strcpy(msg, text);
     }
-    printf("Полученное сообщение\n_________________________________________________________\n - %s\n", text);
+    printf("Полученное сообщение\n%s\n_________________________________________________________\n", text);
     return 1;   
 }
 void SendMessage(int chat_id, char msg[]) 
 {
-    printf("Ответ\n_________________________________________________________\n - %s\n", msg);
+    printf("Ответ\n%s\n_________________________________________________________\n", msg);
     int port = 443;
     char host[] =  "api.telegram.org";
     char header[] = "POST /bot361959180:AAFYVP6qweMx-3hd-eS0-fZEaLdCnkhE9GI/sendMessage HTTP/1.1\r\nHost: files.ctrl.uz\r\nContent-Type: application/json\r\nContent-Length: %d\r\nConnection: close\r\n\r\n%s";
@@ -165,4 +165,8 @@ void SendMessage(int chat_id, char msg[])
     SSL_clear(cSSL);
     SSL_CTX_free(sslctx);
     close(sd);
+}
+int game(char *msg) {
+    strcpy(msg, "Игра(в стадии разработки)");
+    return 1;
 }
