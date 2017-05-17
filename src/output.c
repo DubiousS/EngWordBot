@@ -118,6 +118,7 @@ int output(char *body, char *msg)
     printf("Полученное сообщение\n%s\n_________________________________________________________\n", text);
     return 1;   
 }
+
 void SendMessage(int chat_id, char msg[]) 
 {
     printf("Ответ\n%s\n_________________________________________________________\n", msg);
