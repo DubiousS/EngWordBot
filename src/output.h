@@ -8,12 +8,14 @@
 #include <sys/types.h>
 #include <resolv.h>
 #include <netdb.h>
+#include <wchar.h>
+#include <string.h>
 #include "language.h"
 
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-
+int convert(char *str);
 void SendMessage(int chat_id, char msg[]);
 int output(char *body, char *msg);
 

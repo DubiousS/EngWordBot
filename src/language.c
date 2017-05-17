@@ -94,7 +94,7 @@ FILE *translate_eng(FILE *in, const wchar_t *input_word)
             if(tmp == L'|') {
                 f = 1;
                 fscanf(in,"%C", &tmp);
-               } else {
+            } else {
                 continue;
             }
         }
@@ -156,8 +156,8 @@ int message(char const *input_word, char *msg, char const *type)
         return -1;
     }
     wchar_t word[1024];
+    printf("%s - %zu\n", input_word, strlen(input_word));
     swprintf(word, 1024, L"%s", input_word);
-    printf("%S\n", word);
     if(!strcmp(type, "rus")) {
         input = translate_rus(input, word);
         if(input != NULL) {

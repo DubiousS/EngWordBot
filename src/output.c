@@ -1,9 +1,81 @@
 #include "output.h"
-#include <wchar.h>
-#include <locale.h>
 
 
+int convert(char *str)
+{
+    char temp[7];
+    char result[strlen(str)];
+    bzero(result, strlen(str));
+    char *mass[] = {"\\u0410","\\u0411","\\u0412","\\u0413","\\u0414","\\u0415","\\u0416",
+                    "\\u0417","\\u0418","\\u0419","\\u041a","\\u041b","\\u041c","\\u041d",
+                    "\\u041Ee","\\u041f","\\u0420","\\u0421","\\u0422","\\u0423","\\u0424",
+                    "\\u0425","\\u0426","\\u0427","\\u0428","\\u0429","\\u042a","\\u042b",
+                    "\\u042Cc","\\u042d","\\u042e","\\u042f","\\u0401", "\0"};
 
+    char *mass_two[] = {"А","Б","В","Г","Д","Е",
+                        "Ж","З","И","Й","К","Л","М",
+                        "Н","О","П","Р","С","Т","У",
+                        "Ф","Х","Ц","Ч","Ш","Щ","Ъ",
+                        "Ы","Ь","Э","Ю","Я", "Ё"};
+
+    char *mass_r[] = {"\\u0430","\\u0431","\\u0432","\\u0433","\\u0434","\\u0435","\\u0436",
+                      "\\u0437","\\u0438","\\u0439","\\u043a","\\u043b","\\u043c","\\u043d",
+                      "\\u043e","\\u043f","\\u0440","\\u0441","\\u0442","\\u0443","\\u0444",
+                      "\\u0445","\\u0446","\\u0447","\\u0448","\\u0449","\\u044a","\\u044b",
+                      "\\u044c","\\u044d","\\u044e","\\u044f","\\u0451", "\0"};
+
+    char *mass_r_two[] = {"а","б","в","г","д","е","ж","з","и","й","к","л","м","н","о","п",
+                          "р","с","т","у","ф","х","ц","ч","ш","щ","ъ","ы","ь","э","ю","я","ё"};
+
+
+    int i = 0, k = 0, j = 0, f = 0;
+    while(i < strlen(str)) {
+        if(*(str + i) == '\\' && *(str + i + 1) == 'u' && *(str + i + 2) == '0' && *(str + i + 3) == '4') {
+            if(strlen((str + i)) >= 5) {
+                temp[0] = *(str + i);
+                temp[1] = *(str + i + 1);
+                temp[2] = *(str + i + 2);
+                temp[3] = *(str + i + 3);
+                temp[4] = *(str + i + 4);
+                temp[5] = *(str + i + 5);
+                temp[6] = '\0';
+                k = 0;
+                while(*mass[k] != '\0') {
+                    if(!strcmp(temp, mass[k])) {
+                        strcpy(result + j, mass_two[k]);
+                        j += strlen(mass_two[k]);
+                        f = 0;
+                        i += 6;
+                        k++;
+                        break;
+                    }
+                    if(!strcmp(temp, mass_r[k])) {
+                        strcpy(result + j, mass_r_two[k]);
+                        j += strlen(mass_r_two[k]);
+                        f = 0;
+                        i += 6;
+                        k++;
+                        break;
+                    }
+                    f = 1;
+                    k++;
+                }
+                if(f) {
+                    i++;
+                    f = 0;
+                }
+            }
+        } else {
+            result[j] = *(str + i);
+            j++;
+            i++;
+            continue;
+        }
+    }
+    result[j] = '\0';
+    strcpy(str, result);
+    return 0;
+}
 int output(char *body, char *msg)
 {
     int i = 0;
@@ -17,6 +89,7 @@ int output(char *body, char *msg)
             i++;
         }
     }
+    convert(text);
     if(!strcmp(text, "/start")) {
         strcpy(msg, "Привет, меня зовут Арнольд и меня не отпускают из квартиры, они дали мне телефон, кормят меня чёрной икрой и заставляют отвечать каждому на сообщения.\n Они разрешили мне выполнять только эти команды:\n\n1. /start\n2. /rus <english word>\n3. /eng <русское слово>\n4. /start_eng\n Я конечно не против этой работы, а сказал это просто так, чтобы ты знал.\n");
     } else if(!strcmp(text, "/start_eng")) {
@@ -27,28 +100,27 @@ int output(char *body, char *msg)
         temp[1] = text[1];
         temp[2] = text[2];
         temp[3] = text[3];
-        temp[4] = '\0'; 
+        temp[4] = '\0';
         if(!strcmp(temp, "/eng")) {
-            i = 5;
-            if(strlen(text) > 5) {
-                word = text + i;
-                message(word, msg, "eng");
-            }
-        } else if(!strcmp(temp, "/rus")) {
             i = 5;
             if(strlen(text) > 5) {
                 word = text + i;
                 message(word, msg, "rus");
             }
+        } else if(!strcmp(temp, "/rus")) {
+            i = 5;
+            if(strlen(text) > 5) {
+                word = text + i;
+                message(word, msg, "eng");
+            }
         } else strcpy(msg, text);
     }
-    printf("input - %s\n", text);
+    printf("Полученное сообщение\n_________________________________________________________\n - %s\n", text);
     return 1;   
 }
-
 void SendMessage(int chat_id, char msg[]) 
 {
-    printf("send - %s\n", msg);
+    printf("Ответ\n_________________________________________________________\n - %s\n", msg);
     int port = 443;
     char host[] =  "api.telegram.org";
     char header[] = "POST /bot361959180:AAFYVP6qweMx-3hd-eS0-fZEaLdCnkhE9GI/sendMessage HTTP/1.1\r\nHost: files.ctrl.uz\r\nContent-Type: application/json\r\nContent-Length: %d\r\nConnection: close\r\n\r\n%s";
