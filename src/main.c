@@ -12,8 +12,8 @@
 #include "server.h"
 #include "output.h"
 
-int main() {
-
+int main()
+{
     setlocale(LC_ALL, "ru_RU.UTF-8");
     SSL_CTX * sslctx = InitializeSSL("../ssl/cert.pem");
     int sd = InitializeSocket(8443);
@@ -27,12 +27,14 @@ int main() {
             close(client);
             continue;
         }
-      int pid = fork();
+
+        int pid = fork();
         if (pid != 0) { 
             SSL_clear(ssl);
             close(client);
             continue;
         }
+
         char response[] = "HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n";
         char header[1024];
         bzero(header,1024);
@@ -48,6 +50,7 @@ int main() {
                     close(client);
                     exit(0);
         }
+
         if (strstr(header, "Content-Type: application/json") == NULL) {
             SSL_clear(ssl);
             close(client);
@@ -64,6 +67,7 @@ int main() {
             n = SSL_read(ssl, body + s, len - s);
             s += n;
         }
+        
         char msg[4096];
         printf("Пришел запрос.\n");
         output(body, msg);

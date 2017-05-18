@@ -4,11 +4,9 @@
 CTEST(output_string, message_1)
 {
     char body[] = "{\"asdasda\":\"asfasfasf\",\"text\":\"/rus house\"}";
-    char msg[4096];
-
-    output(body, msg);
-
     char expected[] = "здание";
+    char msg[4096];
+    output(body, msg);
     ASSERT_STR(expected, msg);
 }
 

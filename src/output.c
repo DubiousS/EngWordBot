@@ -1,6 +1,5 @@
 #include "output.h"
 
-
 int convert(char *str)
 {
     char temp[7];
@@ -74,8 +73,10 @@ int convert(char *str)
     }
     result[j] = '\0';
     strcpy(str, result);
+
     return 0;
 }
+
 int output(char *body, char *msg)
 {
     int i = 0;
@@ -116,6 +117,7 @@ int output(char *body, char *msg)
         } else strcpy(msg, text);
     }
     printf("Полученное сообщение\n%s\n_________________________________________________________\n", text);
+
     return 1;   
 }
 
@@ -167,7 +169,10 @@ void SendMessage(int chat_id, char msg[])
     SSL_CTX_free(sslctx);
     close(sd);
 }
-int game(char *msg) {
+
+int game(char *msg) 
+{
     strcpy(msg, "Игра(в стадии разработки)");
+
     return 1;
 }
