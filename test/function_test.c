@@ -63,3 +63,12 @@ CTEST(output_string, message_7)
     output(body, msg);
     ASSERT_STR(expected, msg);
 }
+
+CTEST(output_string, message_8)
+{
+    char body[] = "{\"asdasda\":\"asfasfasf\",\"text\":\"/start\"}";
+    char expected[] = "Привет, меня зовут Арнольд и меня не отпускают из квартиры, они дали мне телефон, кормят меня чёрной икрой и заставляют отвечать каждому на сообщения.\n Они разрешили мне выполнять только эти команды:\n\n1. /start\n2. /rus <english word>\n3. /eng <русское слово>\n4. /start_eng\n Я конечно не против этой работы, а сказал это просто так, чтобы ты знал.\n";
+    char msg[4096];
+    output(body, msg);
+    ASSERT_STR(expected, msg);
+}
