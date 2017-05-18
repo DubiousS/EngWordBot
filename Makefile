@@ -7,9 +7,12 @@ LFLAGS := -I thirdparty -I src -c
  
 all: $(TARGET_TEST) $(TARGET)
 
+
 $(TARGET): build/src/main.o build/src/server.o build/src/output.o build/src/language.o
 		$(CC) build/src/main.o build/src/server.o build/src/output.o build/src/language.o -o $@ -lssl -lcrypto
 
+$(TARGET_TEST): build/test/function_test.o build/test/main.o build/src/language.o build/src/server.o
+		$(CC) build/test/function_test.o build/test/main.o build/src/language.o build/src/server.o -o $@ -lssl -lcrypto
 
 build/src/main.o: src/main.c
 		$(CC) $(CFLAGS) src/main.c -o $@ 
@@ -23,17 +26,11 @@ build/src/output.o: src/output.c
 build/src/language.o: src/language.c
 		$(CC) $(CFLAGS) src/language.c -o $@
 
-
-$(TARGET_TEST): build/test/function_test.o build/test/main.o build/src/output.o build/src/language.o build/src/server.o
-		$(CC) build/test/function_test.o build/test/main.o build/src/output.o build/src/language.o  build/src/server.o -o $@ -lssl -lcrypto
-
-
 build/test/function_test.o: test/function_test.c       
-		$(CC) $(CFLAGS) $(LFLAGS) test/function_test.c -o $@ 
+		$(CC) $(LFLAGS) test/function_test.c -o $@ 
 
 build/test/main.o: test/main.c 
 		$(CC) $(CFLAGS) $(LFLAGS) test/main.c -o $@
-
 
 .PHONY: all clean
 
@@ -41,3 +38,4 @@ clean:
 	rm -f build/src/*.o
 	rm -f build/test/*.o
 	rm -f bin/*
+	rm -f cache/*
