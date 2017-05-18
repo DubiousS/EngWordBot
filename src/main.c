@@ -20,6 +20,9 @@ int main() {
     listen(sd, 5);
     while (1) {
         int client = accept(sd, NULL, NULL);
+
+        printf("Пришел запрос.\n");
+
         SSL * ssl = SSL_new(sslctx);
         SSL_set_fd(ssl, client);
         if (SSL_accept(ssl) <= 0) { 
@@ -65,13 +68,19 @@ int main() {
             s += n;
         }
         char msg[4096];
-        printf("Пришел запрос.\n");
-        output(body, msg);
+        int chat_id = atoi(strstr(body, "\"chat\":{\"id\":") + strlen("\"chat\":{\"id\":"));
+
+        
+        
+        if(!game(msg, body, chat_id)) {
+            output(body, msg);
+        }
+        
         SSL_write(ssl, response, (int)strlen(response));
         SSL_clear(ssl);
         SSL_free(ssl);
         close(client);  
-        int chat_id = atoi(strstr(body, "\"chat\":{\"id\":") + strlen("\"chat\":{\"id\":"));
+        
         SendMessage(chat_id, msg);
         printf("Ответ отправлен.\n\n\n");
     exit(0);

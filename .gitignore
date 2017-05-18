@@ -36,3 +36,4 @@
 *.pem
 build/src/*.o
 bin/*
+cache/*

@@ -1,3 +1,16 @@
+#include <stdio.h>
+#include <openssl/bio.h>
+#include <openssl/ssl.h>
+#include <unistd.h>
+#include <openssl/err.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <resolv.h>
+#include <netdb.h>
+#include <wchar.h>
+#include <string.h>
+#include "language.h"
 #include "output.h"
 
 
@@ -93,7 +106,8 @@ int output(char *body, char *msg)
     if(!strcmp(text, "/start")) {
         strcpy(msg, "Привет, меня зовут Арнольд и меня не отпускают из квартиры, они дали мне телефон, кормят меня чёрной икрой и заставляют отвечать каждому на сообщения.\n Они разрешили мне выполнять только эти команды:\n\n1. /start\n2. /rus <english word>\n3. /eng <русское слово>\n4. /start_eng\n Я конечно не против этой работы, а сказал это просто так, чтобы ты знал.\n");
     } else if(!strcmp(text, "/start_eng")) {
-        game(msg);
+        int chat_id = atoi(strstr(body, "\"chat\":{\"id\":") + strlen("\"chat\":{\"id\":"));
+        game(msg, text, chat_id);
     } else {
         char temp[5];
         temp[0] = text[0];
@@ -115,13 +129,11 @@ int output(char *body, char *msg)
             }
         } else strcpy(msg, text);
     }
-    printf("Полученное сообщение\n%s\n_________________________________________________________\n", text);
     return 1;   
 }
 
 void SendMessage(int chat_id, char msg[]) 
 {
-    printf("Ответ\n%s\n_________________________________________________________\n", msg);
     int port = 443;
     char host[] =  "api.telegram.org";
     char header[] = "POST /bot361959180:AAFYVP6qweMx-3hd-eS0-fZEaLdCnkhE9GI/sendMessage HTTP/1.1\r\nHost: files.ctrl.uz\r\nContent-Type: application/json\r\nContent-Length: %d\r\nConnection: close\r\n\r\n%s";
@@ -167,7 +179,36 @@ void SendMessage(int chat_id, char msg[])
     SSL_CTX_free(sslctx);
     close(sd);
 }
-int game(char *msg) {
-    strcpy(msg, "Игра(в стадии разработки)");
+int game(char *msg, char *body, int id) {
+    char name[128];
+    sprintf(name, "../cache/%d", id);
+    FILE *game = fopen(name, "r+t");
+    if(game == NULL) {
+        game = fopen(name, "w+t");
+        fprintf(game, "%d", -1);
+        fclose(game);
+        return 0;
+    }
+    int tmp, str = 0;
+    FILE *input = fopen("../src/rus-eng.txt", "rt");
+
+    while(fscanf(game, "%d", &tmp) != EOF) {
+        str = str * 10 + tmp;        
+    }
+    if(str > 0) {
+        printf("%d\n", str);
+        
+        while(str) {
+            skip_string(input);
+            str--;
+        }
+        char rus[1024];
+        char eng[1024];
+        read_words(input, msg, eng);
+        fseek(game, 0, SEEK_SET);
+        fprintf(game, "%d", -1);
+    }
+    if(input != NULL) fclose(input);
+    if(game != NULL) fclose(game);
     return 1;
 }
