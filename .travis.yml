@@ -4,7 +4,8 @@ install:
   - make
 
 script: 
-  - cd bin
+  - cd bin/
+  - ls
   - string-test
     
 after_success:
