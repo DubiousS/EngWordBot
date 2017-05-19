@@ -108,7 +108,25 @@ int output(char *body, char *msg)
         strcpy(msg, "Привет, меня зовут Арнольд и меня не отпускают из квартиры, они дали мне телефон, кормят меня чёрной икрой и заставляют отвечать каждому на сообщения.\n Они разрешили мне выполнять только эти команды:\n\n1. /start\n2. /rus <english word>\n3. /eng <русское слово>\n4. /start_eng\n Я конечно не против этой работы, а сказал это просто так, чтобы ты знал.\n");
     } else if(!strcmp(text, "/start_eng")) {
         int chat_id = atoi(strstr(body, "\"chat\":{\"id\":") + strlen("\"chat\":{\"id\":"));
-        game(msg, text, chat_id);
+        char name[128];
+        srand(time(NULL));
+        int row = 1 + rand() % 13891;
+        sprintf(name, "../cache/%d", chat_id);
+
+        FILE *game = fopen(name, "w");
+        fprintf(game, "%d", row);
+
+        if(game != NULL) fclose(game);
+        char eng[1024];
+        FILE *input = fopen("../src/rus-eng.txt", "rt");
+        while(row > 1) {
+            skip_string(input);
+            row--;
+        }
+        read_words(input, eng, msg);
+        char temp[1024];
+        sprintf(temp, "Как переводится вот это слово?\n - %s.", msg);
+        strcpy(msg, temp);
     } else {
         char temp[5];
         temp[0] = text[0];
@@ -116,6 +134,8 @@ int output(char *body, char *msg)
         temp[2] = text[2];
         temp[3] = text[3];
         temp[4] = '\0';
+
+
         if(!strcmp(temp, "/eng")) {
             i = 5;
             if(strlen(text) > 5) {
@@ -198,19 +218,40 @@ int game(char *msg, char *body, int id) {
         str = str * 10 + tmp;        
     }
     if(str > 0) {
-        printf("%d\n", str);
-        
         while(str) {
             skip_string(input);
             str--;
         }
-        char rus[1024];
         char eng[1024];
+        int i = 0;
+        char *text = strstr(body, "\"text\":\"") + strlen("\"text\":\"");
+        while(*(text + i) != '\0') {
+            if(*(text + i) == '\"') {
+                *(text + i) = '\0';
+                break;
+            } else {
+                i++;
+            }
+        }
+        convert(text);
         read_words(input, msg, eng);
+        if(!strcmp(text, msg)) {
+            strcpy(msg, "Правильно! Молодец!");
+            game = fopen(name, "w");
+            fprintf(game, "%d", -1);
+            return 1;
+        } else {
+            char temp[1024];
+            sprintf(temp, "Не правильно! Правильно будет - %s. В следующий раз у тебя получится.", msg);
+            strcpy(msg, temp);
+            game = fopen(name, "w");
+            fprintf(game, "%d", -1);
+            return 1;
+        }
         fseek(game, 0, SEEK_SET);
         fprintf(game, "%d", -1);
     }
     if(input != NULL) fclose(input);
     if(game != NULL) fclose(game);
-    return 1;
+    return 0;
 }

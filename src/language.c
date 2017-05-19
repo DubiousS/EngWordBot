@@ -156,7 +156,6 @@ int message(char const *input_word, char *msg, char const *type)
         return -1;
     }
     wchar_t word[1024];
-    printf("%s - %zu\n", input_word, strlen(input_word));
     swprintf(word, 1024, L"%s", input_word);
     if(!strcmp(type, "rus")) {
         input = translate_rus(input, word);
