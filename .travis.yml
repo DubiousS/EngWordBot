@@ -1,0 +1,14 @@
+language: c
+
+install:
+  - make
+
+script: 
+  - cd bin
+  - ./string-test
+    
+after_success:
+  - make clean
+    
+after_failure:
+  - make clean
