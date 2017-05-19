@@ -5,7 +5,7 @@ install:
 
 script: 
   - cd bin
-  - /string-test
+  - string-test
     
 after_success:
   - make clean
