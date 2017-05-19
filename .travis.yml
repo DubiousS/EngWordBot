@@ -5,7 +5,7 @@ install:
 
 script: 
   - cd bin/
-  - bot-test
+  - ./bot_test
     
 after_success:
   - make clean
