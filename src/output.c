@@ -140,6 +140,7 @@ int output(char *body, char *msg)
         read_words(random, eng, rus);
         char temp[1024];
         sprintf(temp, "%s - %s", eng, rus);
+        strcpy(msg, temp);
         fclose(random);
     } else {
         char temp[5];
