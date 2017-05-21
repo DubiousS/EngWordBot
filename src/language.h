@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <wchar.h>
-#include <locale.h>
-#include <ctype.h>
 
 #ifndef LANGUAGE_H
 #define LANGUAGE_H

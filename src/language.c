@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <string.h>
+#include <wchar.h>
+#include <locale.h>
+#include <ctype.h>
 #include "language.h"
 
 int w_strcmp(const wchar_t *one, const wchar_t *two) 
