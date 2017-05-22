@@ -95,6 +95,8 @@ int output(char *body, char *msg)
     int i = 0;
     char *text = strstr(body, "\"text\":\"") + strlen("\"text\":\"");
     char *word = NULL;
+    char eng[1024];
+    char rus[1024];
     while(*(text + i) != '\0') {
         if(*(text + i) == '\"') {
             *(text + i) = '\0';
@@ -105,7 +107,7 @@ int output(char *body, char *msg)
     }
     convert(text);
     if(!strcmp(text, "/start")) {
-        strcpy(msg, "Привет, меня зовут Арнольд и меня не отпускают из квартиры, они дали мне телефон, кормят меня чёрной икрой и заставляют отвечать каждому на сообщения.\n Они разрешили мне выполнять только эти команды:\n\n1. /start\n2. /rus <english word>\n3. /eng <русское слово>\n4. /start_eng\n Я конечно не против этой работы, а сказал это просто так, чтобы ты знал.\n");
+        strcpy(msg, "Привет, меня зовут Арнольд и меня не отпускают из квартиры, они дали мне телефон, кормят меня чёрной икрой и заставляют отвечать каждому на сообщения.\n Они разрешили мне выполнять только эти команды:\n\n1. /start\n2. /rus <english word>\n3. /eng <русское слово>\n4. /start_eng\n5. /random\n Я конечно не против этой работы, а сказал это просто так, чтобы ты знал.\n");
     } else if(!strcmp(text, "/start_eng")) {
         int chat_id = atoi(strstr(body, "\"chat\":{\"id\":") + strlen("\"chat\":{\"id\":"));
         char name[128];
@@ -117,7 +119,6 @@ int output(char *body, char *msg)
         fprintf(game, "%d", row);
 
         if(game != NULL) fclose(game);
-        char eng[1024];
         FILE *input = fopen("../src/rus-eng.txt", "rt");
         while(row > 1) {
             skip_string(input);
@@ -127,6 +128,20 @@ int output(char *body, char *msg)
         char temp[1024];
         sprintf(temp, "Как переводится вот это слово?\n - %s.", msg);
         strcpy(msg, temp);
+        fclose(input);
+        fclose(game);
+    } else if(!strcmp(text, "/random")) {
+        int ran = 1 + rand() % 13891;
+        FILE *random = fopen("../src/rus-eng.txt", "rt");
+        while(ran > 1) {
+            skip_string(random);
+            ran--;
+        }
+        read_words(random, eng, rus);
+        char temp[1024];
+        sprintf(temp, "%s - %s", eng, rus);
+        strcpy(msg, temp);
+        fclose(random);
     } else {
         char temp[5];
         temp[0] = text[0];
@@ -218,7 +233,7 @@ int game(char *msg, char *body, int id) {
         str = str * 10 + tmp;        
     }
     if(str > 0) {
-        while(str) {
+        while(str - 1) {
             skip_string(input);
             str--;
         }
