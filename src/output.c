@@ -128,9 +128,9 @@ int output(char *body, char *msg)
         char temp[1024];
         sprintf(temp, "Как переводится вот это слово?\n - %s.", msg);
         strcpy(msg, temp);
-        fclose(input);
-        fclose(game);
+        if(input != NULL) fclose(input);
     } else if(!strcmp(text, "/random")) {
+        srand(time(NULL));
         int ran = 1 + rand() % 13891;
         FILE *random = fopen("../src/rus-eng.txt", "rt");
         while(ran > 1) {
@@ -142,7 +142,7 @@ int output(char *body, char *msg)
         sprintf(temp, "%s - %s", eng, rus);
         strcpy(msg, temp);
         fclose(random);
-    } else {
+    }else {
         char temp[5];
         temp[0] = text[0];
         temp[1] = text[1];
